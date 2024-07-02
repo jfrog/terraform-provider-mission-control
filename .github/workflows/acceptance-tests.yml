@@ -131,6 +131,14 @@ jobs:
             --header "cookie: ACCESSTOKEN=${ACCESSTOKEN}; REFRESHTOKEN=${REFRESHTOKEN}")
           echo "::add-mask::$JFROG_ACCESS_TOKEN"
           echo "JFROG_ACCESS_TOKEN=$JFROG_ACCESS_TOKEN" >> "$GITHUB_ENV"
+      - name: Download and decrypt license file
+        env:
+          JFROG_LICENSE_BUCKET_URL: ${{ secrets.JFROG_LICENSE_BUCKET_URL }}
+          JFROG_LICENSE_BUCKET_KEY: ${{ secrets.JFROG_LICENSE_BUCKET_KEY }}
+        run: |
+          curl -s -o ${{ runner.temp }}/encrypted_license.json $JFROG_LICENSE_BUCKET_URL
+          openssl aes-256-cbc -d -md md5 -in ${{ runner.temp }}/encrypted_license.json -pass pass $JFROG_LICENSE_BUCKET_KEY > ${{ runner.temp }}/decrypted_license.json
+          echo "JFROG_LICENSE_BUCKET_FILE=${{ runner.temp }}/decrypted_license.json" >> "$GITHUB_ENV"
       - name: Execute acceptance tests
         env:
           JFROG_LICENSE_BUCKET_URL: ${{ secrets.JFROG_LICENSE_BUCKET_URL }}

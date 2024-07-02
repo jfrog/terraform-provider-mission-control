@@ -1,0 +1,88 @@
+---
+layout: ""
+page_title: "JFrog Mission Control Provider"
+description: |-
+  The JFrog Mission Control provider provides resources to interact with features from JFrog Mission Control.
+---
+
+# JFrog Mission Control Provider
+
+The [JFrog](https://jfrog.com/) Mission Control provider is used to interact with the features from [JFrog Mission Control REST API](https://jfrog.com/help/r/jfrog-rest-apis/mission-control-rest-apis). The provider needs to be configured with the proper credentials before it can be used.
+
+Links to documentation for specific resources can be found in the table of contents to the left.
+
+## Example Usage
+
+{{tffile "examples/example.tf"}}
+
+## Authentication
+
+The JFrog Mission Control provider supports for the following types of authentication:
+* Scoped token
+* Terraform Cloud OIDC provider
+
+### Scoped Token
+
+JFrog scoped tokens may be used via the HTTP Authorization header by providing the `access_token` field to the provider block. Getting this value from the environment is supported with the `JFROG_ACCESS_TOKEN` environment variable.
+
+Usage:
+```terraform
+provider "missioncontrol" {
+  url = "my.jfrog.io"
+  access_token = "abc...xy"
+}
+```
+
+### Terraform Cloud OIDC Provider
+
+If you are using this provider on Terraform Cloud and wish to use dynamic credentials instead of static access token for authentication with JFrog platform, you can leverage Terraform as the OIDC provider.
+
+To setup dynamic credentials, follow these steps:
+1. Configure Terraform Cloud as a generic OIDC provider
+2. Set environment variable in your Terraform Workspace
+3. Setup Terraform Cloud in your configuration
+
+During the provider start up, if it finds env var `TFC_WORKLOAD_IDENTITY_TOKEN` it will use this token with your JFrog instance to exchange for a short-live access token. If that is successful, the provider will the access token for all subsequent API requests with the JFrog instance.
+
+#### Configure Terraform Cloud as generic OIDC provider
+
+Follow [confgure an OIDC integration](https://jfrog.com/help/r/jfrog-platform-administration-documentation/configure-an-oidc-integration). Enter a name for the provider, e.g. `terraform-cloud`. Use `https://app.terraform.io` for "Provider URL". Choose your own value for "Audience", e.g. `jfrog-terraform-cloud`.
+
+Then [configure an identity mapping](https://jfrog.com/help/r/jfrog-platform-administration-documentation/configure-identity-mappings) with an empty "Claims JSON" (`{}`), and select the "Token scope", "User", and "Service" as desired.
+
+#### Set environment variable in your Terraform Workspace
+
+In your workspace, add an environment variable `TFC_WORKLOAD_IDENTITY_AUDIENCE` with audience value (e.g. `jfrog-terraform-cloud`) from JFrog OIDC integration above. See [Manually Generating Workload Identity Tokens](https://developer.hashicorp.com/terraform/cloud-docs/workspaces/dynamic-provider-credentials/manual-generation) for more details.
+
+When a run starts on Terraform Cloud, it will create a workload identity token with the specified audience and assigns it to the environment variable `TFC_WORKLOAD_IDENTITY_TOKEN` for the provider to consume.
+
+#### Setup Terraform Cloud in your configuration
+
+Add `cloud` block to `terraform` block, and add `oidc_provider_name` attribute (from JFrog OIDC integration) to provider block:
+
+```terraform
+terraform {
+  cloud {
+    organization = "my-org"
+    workspaces {
+      name = "my-workspace"
+    }
+  }
+
+  required_providers {
+    missioncontrol = {
+      source  = "jfrog/mission-control"
+      version = "1.0.0"
+    }
+  }
+}
+
+provider "missioncontrol" {
+  url = "https://myinstance.jfrog.io"
+  oidc_provider_name = "terraform-cloud"
+}
+```
+
+**Note:** Ensure `access_token` attribute is not set
+
+{{ .SchemaMarkdown | trimspace }}

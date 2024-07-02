@@ -132,6 +132,9 @@ jobs:
           echo "::add-mask::$JFROG_ACCESS_TOKEN"
           echo "JFROG_ACCESS_TOKEN=$JFROG_ACCESS_TOKEN" >> "$GITHUB_ENV"
       - name: Execute acceptance tests
+        env:
+          JFROG_LICENSE_BUCKET_URL: ${{ secrets.JFROG_LICENSE_BUCKET_URL }}
+          JFROG_LICENSE_BUCKET_KEY: ${{ secrets.JFROG_LICENSE_BUCKET_KEY }}
         run: make acceptance
       - name: Install provider
         run: |
@@ -139,11 +142,6 @@ jobs:
           cat sample.tf | sed -e "s/version =.*/version = \"${PROVIDER_VERSION}\"/g" > sample.tf.tmp
           cp sample.tf.tmp sample.tf && rm sample.tf.tmp
           TERRAFORM_CLI=${{ matrix.cli }} make install
-      # - name: Dump Artifactory logs
-      #   uses: jwalton/gh-docker-logs@v2
-      #   if: failure()
-      #   with:
-      #     tail: '10000'
       - name: Clean up Docker container
         if: always()
         run: docker stop artifactory

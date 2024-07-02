@@ -137,7 +137,7 @@ jobs:
           JFROG_LICENSE_BUCKET_KEY: ${{ secrets.JFROG_LICENSE_BUCKET_KEY }}
         run: |
           curl -s -o ${{ runner.temp }}/encrypted_license.json $JFROG_LICENSE_BUCKET_URL
-          openssl aes-256-cbc -d -md md5 -in ${{ runner.temp }}/encrypted_license.json -pass pass $JFROG_LICENSE_BUCKET_KEY > ${{ runner.temp }}/decrypted_license.json
+          openssl aes-256-cbc -d -md md5 -in ${{ runner.temp }}/encrypted_license.json -pass pass:$JFROG_LICENSE_BUCKET_KEY > ${{ runner.temp }}/decrypted_license.json
           echo "JFROG_LICENSE_BUCKET_FILE=${{ runner.temp }}/decrypted_license.json" >> "$GITHUB_ENV"
       - name: Execute acceptance tests
         env:

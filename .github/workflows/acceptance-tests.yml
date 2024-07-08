@@ -63,6 +63,10 @@ jobs:
         uses: goreleaser/goreleaser-action@v6
         with:
           install-only: true
+      - name: Set Join Key in system.yaml
+        uses: mikefarah/yq@master
+        with:
+          cmd: yq -i '.shared += {"security": {"joinKey": "${{ secrets.ARTIFACTORY_JOIN_KEY }}"}}' ${{ github.workspace }}/scripts/system.yaml
       - name: Create Artifactory data directories and copy data
         env:
           ARTIFACTORY_LICENSE: ${{ secrets.ARTIFACTORY_LICENSE }}
@@ -72,6 +76,11 @@ jobs:
           echo $ARTIFACTORY_LICENSE > ${{ runner.temp }}/artifactory/extra_conf/artifactory.lic
           cp ${{ github.workspace }}/scripts/system.yaml ${{ runner.temp }}/artifactory/var/etc/system.yaml
           sudo chown -R 1030:1030 ${{ runner.temp }}/artifactory/var
+          mkdir -p ${{ runner.temp }}/artifactory-2/extra_conf
+          mkdir -p ${{ runner.temp }}/artifactory-2/var/etc
+          echo $ARTIFACTORY_LICENSE > ${{ runner.temp }}/artifactory-2/extra_conf/artifactory.lic
+          cp ${{ github.workspace }}/scripts/system.yaml ${{ runner.temp }}/artifactory-2/var/etc/system.yaml
+          sudo chown -R 1030:1030 ${{ runner.temp }}/artifactory-2/var
       - name: Run Artifactory container
         id: run_artifactory_container
         run: |
@@ -86,12 +95,26 @@ jobs:
             -v ${{ runner.temp }}/artifactory/var:/var/opt/jfrog/artifactory \
             -p 8081:8081 -p 8082:8082 \
             releases-docker.jfrog.io/jfrog/artifactory-pro:${ARTIFACTORY_VERSION}
+          echo "Start up Artifactory 2 container"
+          docker run -i --name artifactory-2 -d --rm \
+            -v ${{ runner.temp }}/artifactory-2/extra_conf:/artifactory_extra_conf \
+            -v ${{ runner.temp }}/artifactory-2/var:/var/opt/jfrog/artifactory \
+            -p 9081:8081 -p 9082:8082 \
+            releases-docker.jfrog.io/jfrog/artifactory-pro:${ARTIFACTORY_VERSION}
           echo "Set localhost to a container IP address, since we run docker inside of docker"
           export LOCALHOST=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.Gateway}}{{end}}' artifactory)
           export JFROG_URL="http://${LOCALHOST}:8082"
           echo "JFROG_URL=$JFROG_URL" >> "$GITHUB_ENV"
           echo "Waiting for Artifactory services to start at ${JFROG_URL}"
           until $(curl -sf -o /dev/null -m 5 ${JFROG_URL}/artifactory/api/system/ping/); do
+            printf '.'
+            sleep 5
+          done
+          export LOCALHOST_2=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.Gateway}}{{end}}' artifactory-2)
+          export JFROG_URL_2="http://${LOCALHOST-2}:9082"
+          echo "ARTIFACTORY_URL_2=$JFROG_URL_2" >> "$GITHUB_ENV"
+          echo "Waiting for Artifactory 2 services to start at ${JFROG_URL_2}"
+          until $(curl -sf -o /dev/null -m 5 ${JFROG_URL_2}/artifactory/api/system/ping/); do
             printf '.'
             sleep 5
           done
@@ -123,6 +146,7 @@ jobs:
         env:
           JFROG_LICENSE_BUCKET_URL: ${{ secrets.JFROG_LICENSE_BUCKET_URL }}
           JFROG_LICENSE_BUCKET_KEY: ${{ secrets.JFROG_LICENSE_BUCKET_KEY }}
+          ARTIFACTORY_JOIN_KEY: ${{ secrets.ARTIFACTORY_JOIN_KEY }}
         run: make acceptance
       - name: Install provider
         run: |

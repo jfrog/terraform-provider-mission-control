@@ -147,6 +147,7 @@ func (p *MissionControlProvider) DataSources(ctx context.Context) []func() datas
 func (p *MissionControlProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		NewLicenseBucketResource,
+		NewJPDResource,
 	}
 }
 

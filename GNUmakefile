@@ -30,7 +30,6 @@ SONAR_SCANNER_HOME?=${HOME}/.sonar/sonar-scanner-${SONAR_SCANNER_VERSION}-macosx
 default: build
 
 install: clean build
-	rm -fR .terraform.d && \
 	mkdir -p ${BUILD_PATH} && \
 		mv -v dist/terraform-provider-${PRODUCT}_${GORELEASER_ARCH}/terraform-provider-${PRODUCT}_v${NEXT_VERSION}* ${BUILD_PATH} && \
 		rm -f .terraform.lock.hcl && \
@@ -55,9 +54,6 @@ build: fmt
 test:
 	@echo "==> Starting unit tests"
 	go test $(TEST) -timeout=30s -parallel=4
-
-attach:
-	dlv --listen=:2345 --headless=true --api-version=2 --accept-multiclient attach $$(pgrep terraform-provider-${PRODUCT})
 
 acceptance: fmt
 	export TF_ACC=true && \

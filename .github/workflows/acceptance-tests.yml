@@ -114,6 +114,7 @@ jobs:
           echo "::add-mask::$JFROG_ACCESS_TOKEN"
           echo "JFROG_ACCESS_TOKEN=$JFROG_ACCESS_TOKEN" >> "$GITHUB_ENV"
       - name: Download license file
+        if: ${{ env.JFROG_LICENSE_BUCKET_URL != '' }}
         env:
           JFROG_LICENSE_BUCKET_URL: ${{ secrets.JFROG_LICENSE_BUCKET_URL }}
         run: |

@@ -18,10 +18,6 @@ cp ${SCRIPT_DIR}/artifactory.lic ${SCRIPT_DIR}/artifactory/extra_conf
 cp ${SCRIPT_DIR}/system.yaml ${SCRIPT_DIR}/artifactory/var/etc/
 cp ${SCRIPT_DIR}/access.config.patch.yml ${SCRIPT_DIR}/artifactory/var/etc/access
 
-if [[ -z "${ARTIFACTORY_JOIN_KEY}" ]]; then
-  yq -i '.shared += {"security": {"joinKey": "$ARTIFACTORY_JOIN_KEY"}}' ${SCRIPT_DIR}/artifactory/var/etc/system.yaml
-fi
-
 docker run -i --name artifactory -d --rm \
   -e JF_FRONTEND_FEATURETOGGLER_ACCESSINTEGRATION=true \
   -v ${SCRIPT_DIR}/artifactory/extra_conf:/artifactory_extra_conf \

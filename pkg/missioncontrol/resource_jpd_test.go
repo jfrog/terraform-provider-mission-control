@@ -10,15 +10,15 @@ import (
 )
 
 // To make tests work runs ./scripts/run-artifactory-2.sh which will export env var `ARTIFACTORY_URL_2`
-func skipTest() (bool, string) {
-	if len(os.Getenv("ARTIFACTORY_URL_2")) > 0 && len(os.Getenv("ARTIFACTORY_JOIN_KEY")) > 0 {
-		return false, "Env var `ARTIFACTORY_URL_2` and `ARTIFACTORY_JOIN_KEY` are set. Executing test."
+func TestAccJpd_full(t *testing.T) {
+	var skipTest = func() (bool, string) {
+		if len(os.Getenv("ARTIFACTORY_URL_2")) > 0 && len(os.Getenv("ARTIFACTORY_JOIN_KEY")) > 0 {
+			return false, "Env var `ARTIFACTORY_URL_2` and `ARTIFACTORY_JOIN_KEY` are set. Executing test."
+		}
+
+		return true, "Env var `ARTIFACTORY_URL_2` or `ARTIFACTORY_JOIN_KEY` are not set. Skipping test."
 	}
 
-	return true, "Env var `ARTIFACTORY_URL_2` or `ARTIFACTORY_JOIN_KEY` are not set. Skipping test."
-}
-
-func TestAccJpd_full(t *testing.T) {
 	if skip, reason := skipTest(); skip {
 		t.Skipf(reason)
 	}

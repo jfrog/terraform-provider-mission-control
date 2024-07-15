@@ -9,7 +9,7 @@ import (
 	"github.com/jfrog/terraform-provider-shared/util"
 )
 
-func TestAccAccessFederation_full(t *testing.T) {
+func TestAccAccessFederationStar_full(t *testing.T) {
 	var skipTest = func() (bool, string) {
 		if len(os.Getenv("ARTIFACTORY_URL_2")) > 0 {
 			return false, "Env var `ARTIFACTORY_URL_2` is set. Executing test."
@@ -22,10 +22,10 @@ func TestAccAccessFederation_full(t *testing.T) {
 		t.Skipf(reason)
 	}
 
-	_, fqrn, resourceName := testutil.MkNames("test-access-federation", "missioncontrol_access_federation")
+	_, fqrn, resourceName := testutil.MkNames("test-access-federation", "missioncontrol_access_federation_star")
 
 	temp := `
-	resource "missioncontrol_access_federation" "{{ .name }}" {
+	resource "missioncontrol_access_federation_star" "{{ .name }}" {
 		id = "JPD-1"
 		entities = ["USERS", "GROUPS", "PERMISSIONS", "TOKENS"]
 		targets = [
@@ -47,7 +47,7 @@ func TestAccAccessFederation_full(t *testing.T) {
 	config := util.ExecuteTemplate(resourceName, temp, testData)
 
 	updatedTemp := `
-	resource "missioncontrol_access_federation" "{{ .name }}" {
+	resource "missioncontrol_access_federation_star" "{{ .name }}" {
 		id = "JPD-1"
 		entities = ["USERS", "GROUPS", "PERMISSIONS"]
 		targets = [

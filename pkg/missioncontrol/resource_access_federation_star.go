@@ -22,24 +22,24 @@ import (
 
 const accessFederationEndpoint = "mc/api/v1/federation/{id}"
 
-var _ resource.Resource = &accessFederationResource{}
+var _ resource.Resource = &accessFederationStarResource{}
 
-type accessFederationResource struct {
+type accessFederationStarResource struct {
 	ProviderData util.ProviderMetadata
 	TypeName     string
 }
 
-func NewAccessFederationResource() resource.Resource {
-	return &accessFederationResource{
-		TypeName: "missioncontrol_access_federation",
+func NewAccessFederationStarResource() resource.Resource {
+	return &accessFederationStarResource{
+		TypeName: "missioncontrol_access_federation_star",
 	}
 }
 
-func (r *accessFederationResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+func (r *accessFederationStarResource) Metadata(_ context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
 	resp.TypeName = r.TypeName
 }
 
-func (r *accessFederationResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *accessFederationStarResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -101,7 +101,7 @@ func (r *accessFederationResource) Schema(ctx context.Context, req resource.Sche
 	}
 }
 
-type accessFederationResourceModel struct {
+type accessFederationStarResourceModel struct {
 	ID       types.String `tfsdk:"id"`
 	Entities types.Set    `tfsdk:"entities"`
 	Targets  types.Set    `tfsdk:"targets"`
@@ -122,7 +122,7 @@ var permissionFilterAttributeTypes = map[string]attr.Type{
 	"exclude_patterns": types.SetType{ElemType: types.StringType},
 }
 
-func (r *accessFederationResourceModel) fromAPIModel(ctx context.Context, apiModel *accessFederationGetResponseAPIModel) (ds diag.Diagnostics) {
+func (r *accessFederationStarResourceModel) fromAPIModel(ctx context.Context, apiModel *accessFederationGetResponseAPIModel) (ds diag.Diagnostics) {
 	r.Targets = types.SetNull(targetsElmementType)
 
 	if len(apiModel.Targets) > 0 {
@@ -189,7 +189,7 @@ func (r *accessFederationResourceModel) fromAPIModel(ctx context.Context, apiMod
 	return
 }
 
-func (r accessFederationResourceModel) toAPIModel(ctx context.Context, apiModel *accessFederationRequestAPIModel) diag.Diagnostics {
+func (r accessFederationStarResourceModel) toAPIModel(ctx context.Context, apiModel *accessFederationRequestAPIModel) diag.Diagnostics {
 	ds := diag.Diagnostics{}
 
 	var entities []string
@@ -261,7 +261,7 @@ type accessFederationGetResponseAPIModel struct {
 	Targets  []accessFederationTargetAPIModel `json:"targets"`
 }
 
-func (r *accessFederationResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+func (r *accessFederationStarResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
@@ -269,10 +269,10 @@ func (r *accessFederationResource) Configure(ctx context.Context, req resource.C
 	r.ProviderData = req.ProviderData.(util.ProviderMetadata)
 }
 
-func (r *accessFederationResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+func (r *accessFederationStarResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	go util.SendUsageResourceCreate(ctx, r.ProviderData.Client.R(), r.ProviderData.ProductId, r.TypeName)
 
-	var plan accessFederationResourceModel
+	var plan accessFederationStarResourceModel
 
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
 	if resp.Diagnostics.HasError() {
@@ -312,10 +312,10 @@ func (r *accessFederationResource) Create(ctx context.Context, req resource.Crea
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
-func (r *accessFederationResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+func (r *accessFederationStarResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	go util.SendUsageResourceRead(ctx, r.ProviderData.Client.R(), r.ProviderData.ProductId, r.TypeName)
 
-	var state accessFederationResourceModel
+	var state accessFederationStarResourceModel
 
 	resp.Diagnostics.Append(req.State.Get(ctx, &state)...)
 	if resp.Diagnostics.HasError() {
@@ -348,10 +348,10 @@ func (r *accessFederationResource) Read(ctx context.Context, req resource.ReadRe
 	resp.Diagnostics.Append(resp.State.Set(ctx, &state)...)
 }
 
-func (r *accessFederationResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+func (r *accessFederationStarResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	go util.SendUsageResourceUpdate(ctx, r.ProviderData.Client.R(), r.ProviderData.ProductId, r.TypeName)
 
-	var plan accessFederationResourceModel
+	var plan accessFederationStarResourceModel
 
 	resp.Diagnostics.Append(req.Plan.Get(ctx, &plan)...)
 	if resp.Diagnostics.HasError() {
@@ -391,7 +391,7 @@ func (r *accessFederationResource) Update(ctx context.Context, req resource.Upda
 	resp.Diagnostics.Append(resp.State.Set(ctx, &plan)...)
 }
 
-func (r *accessFederationResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+func (r *accessFederationStarResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
 	go util.SendUsageResourceDelete(ctx, r.ProviderData.Client.R(), r.ProviderData.ProductId, r.TypeName)
 
 	resp.Diagnostics.AddWarning(
@@ -404,6 +404,6 @@ func (r *accessFederationResource) Delete(ctx context.Context, req resource.Dele
 }
 
 // ImportState imports the resource into the Terraform state.
-func (r *accessFederationResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *accessFederationStarResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 }

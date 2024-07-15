@@ -9,6 +9,8 @@ import (
 	"github.com/jfrog/terraform-provider-shared/util"
 )
 
+// To execute this test, you need setup second Artifactory instance with circle-of-trust.
+// Then set them as env vars before running the test
 func TestAccAccessFederationStar_full(t *testing.T) {
 	var skipTest = func() (bool, string) {
 		if len(os.Getenv("ARTIFACTORY_URL_2")) > 0 {

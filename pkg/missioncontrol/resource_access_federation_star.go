@@ -97,7 +97,9 @@ func (r *accessFederationStarResource) Schema(ctx context.Context, req resource.
 				Description: "Target JPD",
 			},
 		},
-		MarkdownDescription: "Provides a [JFrog Access Federation](https://jfrog.com/help/r/jfrog-platform-administration-documentation/access-federation) resource to setup Star Topology.~>The source and targets must have been configured properly for [Access Federation](https://jfrog.com/help/r/jfrog-platform-administration-documentation/access-federation).",
+		MarkdownDescription: "Provides a [JFrog Access Federation](https://jfrog.com/help/r/jfrog-platform-administration-documentation/access-federation) resource to setup Star Topology.\n" +
+			"~>The source and targets must have been configured properly for [Access Federation](https://jfrog.com/help/r/jfrog-platform-administration-documentation/access-federation).\n" +
+			"~>**Deletion** is currently not supported via REST API. This must be done using JFrog UI.",
 	}
 }
 
@@ -396,7 +398,7 @@ func (r *accessFederationStarResource) Delete(ctx context.Context, req resource.
 
 	resp.Diagnostics.AddWarning(
 		"Access Federation deletion not supported",
-		" The resource has be deleted from Terraform state. To remove a registered synchronization target, please follow these steps: https://jfrog.com/help/r/jfrog-platform-administration-documentation/remove-a-registered-synchronization-target.",
+		" The resource has be deleted from Terraform state. To delete Access Federation relationship, please use the JFrog UI.",
 	)
 
 	// If the logic reaches here, it implicitly succeeded and will remove

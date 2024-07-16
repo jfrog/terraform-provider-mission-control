@@ -1,3 +1,9 @@
+## 1.0.2 (July 16, 2024). Tested on Artifactory 7.84.17 with Terraform 1.9.2 and OpenTofu 1.7.3
+
+IMPROVEMENTS:
+
+* resource/missioncontrol_jpd: Fix configuration sample and import in documentation. PR: [#11](https://github.com/jfrog/terraform-provider-mission-control/pull/11)
+
 ## 1.0.1 (July 16, 2024). Tested on Artifactory 7.84.17 with Terraform 1.9.2 and OpenTofu 1.7.3
 
 IMPROVEMENTS:

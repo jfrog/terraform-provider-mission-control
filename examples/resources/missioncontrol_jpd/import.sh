@@ -1,0 +1,1 @@
+terraform import missioncontrol_jpd.my-jpd MyJPD

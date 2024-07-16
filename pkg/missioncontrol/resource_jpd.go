@@ -59,7 +59,7 @@ func (r *jpdResource) Schema(ctx context.Context, req resource.SchemaRequest, re
 					validator_string.IsURLHttpOrHttps(),
 					stringvalidator.RegexMatches(regexp.MustCompile(`^.+/$`), "must end in '/'"),
 				},
-				Description: "The Platform deployment URL: http://<hostname>:<port>/; for example: http://myplatformserver:8082/. Note: For legacy instances, version 6.x and lower, the URL should contain the instance root context: http://<hostname>:<port>/<context>/; for example http://myv6server:8081/artifactory/. URL must ends with trailing slash.",
+				Description: "The Platform deployment URL: `http://<hostname>:<port>/`; for example: `http://myplatformserver:8082/`. Note: For legacy instances, version 6.x and lower, the URL should contain the instance root context: `http://<hostname>:<port>/<context>/`; for example `http://myv6server:8081/artifactory/`. URL must ends with trailing slash.",
 			},
 			"token": schema.StringAttribute{
 				Optional:  true,
@@ -187,7 +187,7 @@ func (r *jpdResource) Schema(ctx context.Context, req resource.SchemaRequest, re
 				Computed: true,
 			},
 		},
-		MarkdownDescription: "Provides a [JFrog Platform Deployment](https://jfrog.com/help/r/jfrog-platform-administration-documentation/manage-platform-deployments) resource to manage JPD.\n~>Supported on the Self-Hosted platform, with an Enterprise X or Enterprise+ license.",
+		MarkdownDescription: "Provides a [JFrog Platform Deployment](https://jfrog.com/help/r/jfrog-platform-administration-documentation/manage-platform-deployments) resource to manage JPD.\n\n~>Supported on the Self-Hosted platform, with an Enterprise X or Enterprise+ license.",
 	}
 }
 

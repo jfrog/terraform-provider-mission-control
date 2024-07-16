@@ -97,8 +97,8 @@ func (r *accessFederationStarResource) Schema(ctx context.Context, req resource.
 				Description: "Target JPD",
 			},
 		},
-		MarkdownDescription: "Provides a [JFrog Access Federation](https://jfrog.com/help/r/jfrog-platform-administration-documentation/access-federation) resource to setup Star Topology.\n" +
-			"~>The source and targets must have been configured properly for [Access Federation](https://jfrog.com/help/r/jfrog-platform-administration-documentation/access-federation).\n" +
+		MarkdownDescription: "Provides a [JFrog Access Federation](https://jfrog.com/help/r/jfrog-platform-administration-documentation/access-federation) resource to setup Star Topology.\n\n" +
+			"~>The source and targets must have been configured properly for [Access Federation](https://jfrog.com/help/r/jfrog-platform-administration-documentation/access-federation).\n\n" +
 			"~>**Deletion** is currently not supported via REST API. This must be done using JFrog UI.",
 	}
 }

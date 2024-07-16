@@ -1,0 +1,1 @@
+terraform import missioncontrol_access_federation_mesh.my-mesh JPD-1:JPD-2

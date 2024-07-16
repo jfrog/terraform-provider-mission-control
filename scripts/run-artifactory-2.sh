@@ -14,7 +14,7 @@ sudo rm -rf ${SCRIPT_DIR}/artifactory-2/
 mkdir -p ${SCRIPT_DIR}/artifactory-2/extra_conf
 mkdir -p ${SCRIPT_DIR}/artifactory-2/var/etc/access
 
-cp ${SCRIPT_DIR}/artifactory.lic ${SCRIPT_DIR}/artifactory-2/extra_conf
+cp ${SCRIPT_DIR}/artifactory-2.lic ${SCRIPT_DIR}/artifactory-2/extra_conf
 cp ${SCRIPT_DIR}/system.yaml ${SCRIPT_DIR}/artifactory-2/var/etc/
 cp ${SCRIPT_DIR}/access.config.patch.yml ${SCRIPT_DIR}/artifactory-2/var/etc/access
 

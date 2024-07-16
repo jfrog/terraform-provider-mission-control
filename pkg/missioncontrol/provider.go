@@ -148,6 +148,8 @@ func (p *MissionControlProvider) Resources(ctx context.Context) []func() resourc
 	return []func() resource.Resource{
 		NewLicenseBucketResource,
 		NewJPDResource,
+		NewAccessFederationStarResource,
+		NewAccessFederationMeshResource,
 	}
 }
 

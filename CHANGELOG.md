@@ -1,3 +1,9 @@
+## 1.0.1 (July 16, 2024). Tested on Artifactory 7.84.17 with Terraform 1.9.2 and OpenTofu 1.7.3
+
+IMPROVEMENTS:
+
+* resource/missioncontrol_access_federation_mesh, resource/missioncontrol_access_federation_star, resource/missioncontrol_jpd: Fix documentation formatting. PR: [#10](https://github.com/jfrog/terraform-provider-mission-control/pull/10)
+
 ## 1.0.0 (July 16, 2024). Tested on Artifactory 7.84.17 with Terraform 1.9.2 and OpenTofu 1.7.3
 
 FEATURES:

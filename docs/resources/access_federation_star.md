@@ -11,7 +11,9 @@ description: |-
 # missioncontrol_access_federation_star (Resource)
 
 Provides a [JFrog Access Federation](https://jfrog.com/help/r/jfrog-platform-administration-documentation/access-federation) resource to setup Star Topology.
+
 ~>The source and targets must have been configured properly for [Access Federation](https://jfrog.com/help/r/jfrog-platform-administration-documentation/access-federation).
+
 ~>**Deletion** is currently not supported via REST API. This must be done using JFrog UI.
 
 ## Example Usage

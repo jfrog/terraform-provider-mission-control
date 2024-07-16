@@ -10,6 +10,7 @@ description: |-
 # missioncontrol_jpd (Resource)
 
 Provides a [JFrog Platform Deployment](https://jfrog.com/help/r/jfrog-platform-administration-documentation/manage-platform-deployments) resource to manage JPD.
+
 ~>Supported on the Self-Hosted platform, with an Enterprise X or Enterprise+ license.
 
 
@@ -21,7 +22,7 @@ Provides a [JFrog Platform Deployment](https://jfrog.com/help/r/jfrog-platform-a
 
 - `location` (Attributes) The geographical location of the Platform Deployment to be displayed on a global Platform Deployment view (see [below for nested schema](#nestedatt--location))
 - `name` (String) A unique logical name for this Platform Deployment
-- `url` (String) The Platform deployment URL: http://<hostname>:<port>/; for example: http://myplatformserver:8082/. Note: For legacy instances, version 6.x and lower, the URL should contain the instance root context: http://<hostname>:<port>/<context>/; for example http://myv6server:8081/artifactory/. URL must ends with trailing slash.
+- `url` (String) The Platform deployment URL: `http://<hostname>:<port>/`; for example: `http://myplatformserver:8082/`. Note: For legacy instances, version 6.x and lower, the URL should contain the instance root context: `http://<hostname>:<port>/<context>/`; for example `http://myv6server:8081/artifactory/`. URL must ends with trailing slash.
 
 ### Optional
 

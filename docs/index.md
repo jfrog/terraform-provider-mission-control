@@ -67,7 +67,7 @@ To setup dynamic credentials, follow these steps:
 2. Set environment variable in your Terraform Workspace
 3. Setup Terraform Cloud in your configuration
 
-During the provider start up, if it finds env var `TFC_WORKLOAD_IDENTITY_TOKEN` it will use this token with your JFrog instance to exchange for a short-live access token. If that is successful, the provider will the access token for all subsequent API requests with the JFrog instance.
+During the provider start up, if it finds env var `TFC_WORKLOAD_IDENTITY_TOKEN` it will use this token with your JFrog instance to exchange for a short-live access token. If that is successful, the provider will use the access token for all subsequent API requests with the JFrog instance.
 
 #### Configure Terraform Cloud as generic OIDC provider
 
@@ -80,6 +80,8 @@ Then [configure an identity mapping](https://jfrog.com/help/r/jfrog-platform-adm
 In your workspace, add an environment variable `TFC_WORKLOAD_IDENTITY_AUDIENCE` with audience value (e.g. `jfrog-terraform-cloud`) from JFrog OIDC integration above. See [Manually Generating Workload Identity Tokens](https://developer.hashicorp.com/terraform/cloud-docs/workspaces/dynamic-provider-credentials/manual-generation) for more details.
 
 When a run starts on Terraform Cloud, it will create a workload identity token with the specified audience and assigns it to the environment variable `TFC_WORKLOAD_IDENTITY_TOKEN` for the provider to consume.
+
+See [Generating Multiple Tokens](https://developer.hashicorp.com/terraform/cloud-docs/workspaces/dynamic-provider-credentials/manual-generation#generating-multiple-tokens) on HCP Terraform for more details on using different tokens.
 
 #### Setup Terraform Cloud in your configuration
 
@@ -105,6 +107,7 @@ terraform {
 provider "missioncontrol" {
   url = "https://myinstance.jfrog.io"
   oidc_provider_name = "terraform-cloud"
+  tfc_credential_tag_name = "JFROG"
 }
 ```
 
@@ -117,4 +120,5 @@ provider "missioncontrol" {
 
 - `access_token` (String, Sensitive) This is a access token that can be given to you by your admin under `Platform Configuration -> User Management -> Access Tokens`. This can also be sourced from the `JFROG_ACCESS_TOKEN` environment variable.
 - `oidc_provider_name` (String) OIDC provider name. See [Configure an OIDC Integration](https://jfrog.com/help/r/jfrog-platform-administration-documentation/configure-an-oidc-integration) for more details.
+- `tfc_credential_tag_name` (String) Terraform Cloud Workload Identity Token tag name. Use for generating multiple TFC workload identity tokens. When set, the provider will attempt to use env var with this tag name as suffix. **Note:** this is case sensitive, so if set to `JFROG`, then env var `TFC_WORKLOAD_IDENTITY_TOKEN_JFROG` is used instead of `TFC_WORKLOAD_IDENTITY_TOKEN`. See [Generating Multiple Tokens](https://developer.hashicorp.com/terraform/cloud-docs/workspaces/dynamic-provider-credentials/manual-generation#generating-multiple-tokens) on HCP Terraform for more details.
 - `url` (String) JFrog Platform URL. This can also be sourced from the `JFROG_URL` environment variable.

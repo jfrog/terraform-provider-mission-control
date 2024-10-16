@@ -1,6 +1,6 @@
 module github.com/jfrog/terraform-provider-mission-control
 
-go 1.22.5
+go 1.22.7
 
 require (
 	github.com/go-resty/resty/v2 v2.15.3
@@ -10,7 +10,7 @@ require (
 	github.com/hashicorp/terraform-plugin-go v0.24.0
 	github.com/hashicorp/terraform-plugin-log v0.9.0
 	github.com/hashicorp/terraform-plugin-testing v1.10.0
-	github.com/jfrog/terraform-provider-shared v1.25.5
+	github.com/jfrog/terraform-provider-shared v1.26.0
 	github.com/samber/lo v1.47.0
 )
 

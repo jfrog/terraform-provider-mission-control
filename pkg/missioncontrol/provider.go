@@ -28,9 +28,10 @@ type MissionControlProvider struct {
 }
 
 type missionControlProviderModel struct {
-	URL              types.String `tfsdk:"url"`
-	AccessToken      types.String `tfsdk:"access_token"`
-	OIDCProviderName types.String `tfsdk:"oidc_provider_name"`
+	URL                  types.String `tfsdk:"url"`
+	AccessToken          types.String `tfsdk:"access_token"`
+	OIDCProviderName     types.String `tfsdk:"oidc_provider_name"`
+	TFCCredentialTagName types.String `tfsdk:"tfc_credential_tag_name"`
 }
 
 func NewProvider() func() provider.Provider {
@@ -73,19 +74,22 @@ func (p *MissionControlProvider) Configure(ctx context.Context, req provider.Con
 		return
 	}
 
-	oidcAccessToken, err := util.OIDCTokenExchange(ctx, platformClient, config.OIDCProviderName.ValueString())
-	if err != nil {
-		resp.Diagnostics.AddError(
-			"Failed OIDC ID token exchange",
-			err.Error(),
-		)
-		return
-	}
+	oidcProviderName := config.OIDCProviderName.ValueString()
+	if oidcProviderName != "" {
+		oidcAccessToken, err := util.OIDCTokenExchange(ctx, platformClient, oidcProviderName, config.TFCCredentialTagName.ValueString())
+		if err != nil {
+			resp.Diagnostics.AddError(
+				"Failed OIDC ID token exchange",
+				err.Error(),
+			)
+			return
+		}
 
-	// use token from OIDC provider, which should take precedence over
-	// environment variable data, if found.
-	if oidcAccessToken != "" {
-		accessToken = oidcAccessToken
+		// use token from OIDC provider, which should take precedence over
+		// environment variable data, if found.
+		if oidcAccessToken != "" {
+			accessToken = oidcAccessToken
+		}
 	}
 
 	// use token from configuration, which should take precedence over
@@ -177,6 +181,13 @@ func (p *MissionControlProvider) Schema(ctx context.Context, req provider.Schema
 					stringvalidator.LengthAtLeast(1),
 				},
 				MarkdownDescription: "OIDC provider name. See [Configure an OIDC Integration](https://jfrog.com/help/r/jfrog-platform-administration-documentation/configure-an-oidc-integration) for more details.",
+			},
+			"tfc_credential_tag_name": schema.StringAttribute{
+				Optional: true,
+				Validators: []validator.String{
+					stringvalidator.LengthAtLeast(1),
+				},
+				Description: "Terraform Cloud Workload Identity Token tag name. Use for generating multiple TFC workload identity tokens. When set, the provider will attempt to use env var with this tag name as suffix. **Note:** this is case sensitive, so if set to `JFROG`, then env var `TFC_WORKLOAD_IDENTITY_TOKEN_JFROG` is used instead of `TFC_WORKLOAD_IDENTITY_TOKEN`. See [Generating Multiple Tokens](https://developer.hashicorp.com/terraform/cloud-docs/workspaces/dynamic-provider-credentials/manual-generation#generating-multiple-tokens) on HCP Terraform for more details.",
 			},
 		},
 		MarkdownDescription: "The JFrog Mission Control provider provides resources to interact with Mission Control supported by JFrog Platform. See [official documentation](https://jfrog.com/help/r/get-started-with-the-jfrog-platform/jfrog-mission-control) for more details.",

@@ -187,7 +187,7 @@ func (r *jpdResource) Schema(ctx context.Context, req resource.SchemaRequest, re
 				Computed: true,
 			},
 		},
-		MarkdownDescription: "Provides a [JFrog Platform Deployment](https://jfrog.com/help/r/jfrog-platform-administration-documentation/manage-platform-deployments) resource to manage JPD.\n\n~>Supported on the Self-Hosted platform, with an Enterprise X or Enterprise+ license.",
+		MarkdownDescription: "Provides a [JFrog Platform Deployment](https://jfrog.com/help/r/jfrog-platform-administration-documentation/manage-platform-deployments) resource to manage JPD.",
 	}
 }
 

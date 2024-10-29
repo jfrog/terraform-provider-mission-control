@@ -4,14 +4,11 @@ page_title: "missioncontrol_jpd Resource - missioncontrol"
 subcategory: ""
 description: |-
   Provides a JFrog Platform Deployment https://jfrog.com/help/r/jfrog-platform-administration-documentation/manage-platform-deployments resource to manage JPD.
-  ~>Supported on the Self-Hosted platform, with an Enterprise X or Enterprise+ license.
 ---
 
 # missioncontrol_jpd (Resource)
 
 Provides a [JFrog Platform Deployment](https://jfrog.com/help/r/jfrog-platform-administration-documentation/manage-platform-deployments) resource to manage JPD.
-
-~>Supported on the Self-Hosted platform, with an Enterprise X or Enterprise+ license.
 
 ## Example Usage
 
